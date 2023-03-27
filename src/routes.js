@@ -13,7 +13,7 @@ const routes = new Router();
 routes.post('/sessions', SessionsController.create);
 routes.get('/hello', HelloControler.index);
 
-routes.use(auth);
+ // routes.use(auth);
 
 // Rotas de usuário
 routes.get('/users', UsersController.index);
