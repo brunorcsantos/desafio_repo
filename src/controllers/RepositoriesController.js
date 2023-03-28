@@ -5,14 +5,23 @@ class RepositoriesController {
     async index(req, res) {
         try {
             const { user_id } = req.params;
+            const { q } = req.query;
+            
             const user = await User.findById(user_id);
 
             if (!user){
                 return res.status(404).json();
             }
 
+            let query = {};
+
+            if(q){
+                query = { url: {$regex: q} }
+            }
+
             const repositories = await Repository.find({
-                userId: user_id
+                userId: user_id,
+                ...query
             });
 
             return res.json(repositories);
@@ -35,7 +44,7 @@ class RepositoriesController {
 
             const repository = await Repository.findOne({
                 userId: user_id,
-                name
+                url
             })
 
             if (repository){
@@ -77,7 +86,7 @@ class RepositoriesController {
 
             await repository.deleteOne();
 
-            return res.status(200).json();
+            return res.status(200).json("Repositório excluído com sucesso.");
             
         } catch (err) {
             console.error(err);
